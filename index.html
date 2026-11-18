@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FALSAFA AKADEMIYASI</title>
+
 <style>
 :root{--bg:#080b10;--gold:#d7ad62;--pale:#f0d69a;--muted:#c1c4ca}
 *{box-sizing:border-box}
@@ -23,6 +24,7 @@ section{padding:65px 0}
 h2{font-size:38px;color:var(--pale);font-weight:500}
 .btn{padding:13px 20px;background:var(--gold);color:#101010;border:1px solid var(--gold);cursor:pointer;font:12px Arial;letter-spacing:1px}
 .btn.alt{background:transparent;color:var(--pale)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 .grid,.auth{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .auth{grid-template-columns:1fr 1fr}
 .card{background:#111925;border:1px solid #d7ad6240;padding:24px}
@@ -34,6 +36,7 @@ h2{font-size:38px;color:var(--pale);font-weight:500}
 .status{font:13px/1.6 Arial;color:var(--pale);margin-top:18px;overflow-wrap:anywhere}
 .signed{display:none;font:13px Arial;color:var(--muted);padding:12px;border:1px solid #d7ad6240;margin-top:12px}
 footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
+footer a{color:var(--pale)}
 #student-portal{display:none;min-height:75vh;padding:45px 0}
 .portal-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:30px}
 .portal-welcome{margin-bottom:35px}
@@ -41,16 +44,31 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 .portal-card{min-height:210px}
 .portal-card p{min-height:55px}
 .portal-progress{margin-top:30px}
-.portal-progress progress{width:100%;accent-color:var(--gold)}
+.portal-progress progress{width:100%;height:12px;accent-color:var(--gold)}
 #lesson-area{margin-top:25px}
 #lesson-text{white-space:pre-line}
+.lesson-list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
+.lesson-item{background:#111925;border:1px solid #d7ad6240;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.lesson-item h4{margin:0 0 7px;color:var(--pale);font-weight:500;font-size:17px}
+.lesson-item p{font-size:12px;margin:0}
+.lesson-number{font:12px Arial;color:var(--gold);margin-bottom:8px}
+.lesson-state{font:11px Arial;color:#aaa;white-space:nowrap}
+.progress-line{height:8px;background:#27303b;margin:15px 0;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:var(--gold);transition:width .3s}
+.lesson-content{line-height:1.9;color:var(--muted);font:15px/1.9 Arial;white-space:pre-line}
+.lesson-meta{font:12px Arial;color:var(--gold);margin:12px 0}
+.video-link{display:inline-block;margin:15px 0;color:var(--pale);font:13px Arial}
+.empty-state{padding:22px;background:#111925;border:1px solid #d7ad6240;color:var(--muted);font:14px/1.7 Arial}
 @media(max-width:700px){
-.grid,.auth{grid-template-columns:1fr}
+.grid,.auth,.lesson-list{grid-template-columns:1fr}
 .hero{min-height:430px}
 .portal-card{min-height:0}
+.lesson-item{align-items:flex-start}
+h2{font-size:30px}
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -58,7 +76,7 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 <div class="brand">FALSAFA AKADEMIYASI
 <small>BILIM · TAFAKKUR · INSONIYAT</small>
 </div>
-<select id="lang">
+<select id="lang" aria-label="Language">
 <option value="uz">UZ</option>
 <option value="ru">RU</option>
 <option value="en">EN</option>
@@ -71,7 +89,7 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 <div class="kicker" data-uz="Mustaqil fikrlash sari yo‘l" data-ru="Путь к самостоятельному мышлению" data-en="A journey toward independent thought">Mustaqil fikrlash sari yo‘l</div>
 <h1>FALSAFA<br>AKADEMIYASI</h1>
 <p data-uz="Falsafa orqali olamni anglang, savol berishni o‘rganing va mustaqil tafakkuringizni rivojlantiring. Barcha uchun ochiq bepul ta’lim." data-ru="Познайте мир через философию, учитесь задавать вопросы и развивайте самостоятельное мышление. Бесплатное образование для всех." data-en="Explore the world through philosophy, learn to ask meaningful questions, and develop independent thinking. Free education for all.">Falsafa orqali olamni anglang, savol berishni o‘rganing va mustaqil tafakkuringizni rivojlantiring. Barcha uchun ochiq bepul ta’lim.</p>
-<a class="btn" href="#account">RO‘YXATDAN O‘TISH</a>
+<a class="btn" href="#account" data-uz="RO‘YXATDAN O‘TISH" data-ru="РЕГИСТРАЦИЯ" data-en="REGISTER">RO‘YXATDAN O‘TISH</a>
 </div>
 </section>
 
@@ -86,7 +104,7 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 <section class="dark">
 <div class="wrap">
 <div class="kicker">TA’LIM YO‘NALISHLARI</div>
-<h2>Kurslar</h2>
+<h2 data-uz="Kurslar" data-ru="Курсы" data-en="Courses">Kurslar</h2>
 <div class="grid">
 <article class="card"><h3>Falsafaga kirish</h3><p>Asosiy savollar, falsafiy tafakkur va buyuk mutafakkirlar bilan tanishuv.</p></article>
 <article class="card"><h3>Mantiq va tanqidiy fikrlash</h3><p>Dalillarni tahlil qilish, xatolarni aniqlash va mustaqil xulosa chiqarish.</p></article>
@@ -99,7 +117,7 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 <div class="wrap">
 <div class="kicker">TALABALAR PORTALI</div>
 <h2 data-uz="Ro‘yxatdan o‘ting yoki tizimga kiring" data-ru="Регистрация или вход" data-en="Create an account or sign in">Ro‘yxatdan o‘ting yoki tizimga kiring</h2>
-<p>Akademiya kurslariga qo‘shilish uchun elektron pochtangizdan foydalaning.</p>
+<p data-uz="Akademiya kurslariga qo‘shilish uchun elektron pochtangizdan foydalaning." data-ru="Используйте электронную почту, чтобы присоединиться к курсам академии." data-en="Use your email address to join the academy courses.">Akademiya kurslariga qo‘shilish uchun elektron pochtangizdan foydalaning.</p>
 
 <div class="auth">
 <div class="card">
@@ -114,18 +132,18 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 <input id="su-email" type="email" autocomplete="email" placeholder="name@example.com">
 <label data-uz="Parol (kamida 8 belgi)" data-ru="Пароль (минимум 8 символов)" data-en="Password (at least 8 characters)">Parol (kamida 8 belgi)</label>
 <input id="su-pass" type="password" minlength="8" autocomplete="new-password">
-<div class="actions"><button class="btn" id="signup">RO‘YXATDAN O‘TISH</button></div>
+<div class="actions"><button class="btn" id="signup" data-uz="RO‘YXATDAN O‘TISH" data-ru="ЗАРЕГИСТРИРОВАТЬСЯ" data-en="REGISTER">RO‘YXATDAN O‘TISH</button></div>
 </div>
 
 <div class="card">
 <h3 data-uz="Hisobga kirish" data-ru="Войти в аккаунт" data-en="Sign in">Hisobga kirish</h3>
 <label>Email</label>
 <input id="li-email" type="email" autocomplete="email" placeholder="name@example.com">
-<label>Parol</label>
+<label data-uz="Parol" data-ru="Пароль" data-en="Password">Parol</label>
 <input id="li-pass" type="password" autocomplete="current-password">
 <div class="actions">
-<button class="btn alt" id="login">KIRISH</button>
-<button class="btn alt" id="logout" hidden>CHIQISH</button>
+<button class="btn alt" id="login" data-uz="KIRISH" data-ru="ВОЙТИ" data-en="SIGN IN">KIRISH</button>
+<button class="btn alt" id="logout" hidden data-uz="CHIQISH" data-ru="ВЫЙТИ" data-en="SIGN OUT">CHIQISH</button>
 </div>
 <div id="signed" class="signed"></div>
 </div>
@@ -134,53 +152,59 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 </div>
 </section>
 
-<!-- ICHKI TALABA KABINETI -->
+<!-- TALABA SHAXSIY KABINETI -->
 <section id="student-portal">
 <div class="wrap">
+
 <div class="portal-top">
-<div class="brand">FALSAFA AKADEMIYASI<small>SHAXSIY KABINET</small></div>
-<button class="btn alt" id="portal-logout">CHIQISH</button>
+<div class="brand">FALSAFA AKADEMIYASI
+<small data-uz="SHAXSIY KABINET" data-ru="ЛИЧНЫЙ КАБИНЕТ" data-en="STUDENT DASHBOARD">SHAXSIY KABINET</small>
+</div>
+<button class="btn alt" id="portal-logout" data-uz="CHIQISH" data-ru="ВЫЙТИ" data-en="SIGN OUT">CHIQISH</button>
 </div>
 
 <div class="portal-welcome">
-<div class="kicker">TALABALAR PORTALI</div>
-<h2>Shaxsiy kabinet</h2>
+<div class="kicker" data-uz="TALABALAR PORTALI" data-ru="ПОРТАЛ СТУДЕНТА" data-en="STUDENT PORTAL">TALABALAR PORTALI</div>
+<h2 data-uz="Shaxsiy kabinet" data-ru="Личный кабинет" data-en="Student dashboard">Shaxsiy kabinet</h2>
 <p id="student-name">Xush kelibsiz!</p>
 </div>
 
-<div class="kicker">MENING KURSLARIM</div>
-<h2>Kurslar</h2>
-
-<div class="grid">
-<article class="card portal-card">
-<h3>01 · Falsafaga kirish</h3>
-<p>Falsafa asoslari, asosiy savollar va falsafiy tafakkur.</p>
-<button class="btn" onclick="openLesson('intro')">Kursni boshlash</button>
-</article>
-
-<article class="card portal-card">
-<h3>02 · Buyuk faylasuflar</h3>
-<p>Sokrat, Platon, Aristotel, Ibn Sino va Al-Forobiy.</p>
-<button class="btn" onclick="openLesson('philosophers')">Kursni boshlash</button>
-</article>
-
-<article class="card portal-card">
-<h3>03 · Mantiq</h3>
-<p>Mantiq, dalillar va tanqidiy fikrlash.</p>
-<button class="btn" onclick="openLesson('logic')">Kursni boshlash</button>
-</article>
+<div class="card">
+<div class="kicker" data-uz="MENING KURSIM" data-ru="МОЙ КУРС" data-en="MY COURSE">MENING KURSIM</div>
+<h2 id="course-title">Falsafaga kirish</h2>
+<p id="course-description">Falsafa asoslari va mustaqil tafakkur.</p>
+<div class="portal-progress">
+<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<strong data-uz="O‘quv jarayoni" data-ru="Учебный процесс" data-en="Learning progress">O‘quv jarayoni</strong>
+<strong id="progress-label">0%</strong>
+</div>
+<div class="progress-line"><div class="progress-fill" id="progress-fill"></div></div>
+<p id="progress-detail">0 / 20 dars yakunlandi</p>
+</div>
 </div>
 
-<div class="card portal-progress">
-<h3>O‘quv jarayoni</h3>
-<p>Bu boshlang‘ich kabinet. Darslarni tugatganingiz sari keyingi bosqichlarda haqiqiy progress va testlar ulanadi.</p>
+<div style="margin-top:35px">
+<div class="kicker" data-uz="KURS DASTURI" data-ru="ПРОГРАММА КУРСА" data-en="COURSE CURRICULUM">KURS DASTURI</div>
+<h2 data-uz="Darslar" data-ru="Уроки" data-en="Lessons">Darslar</h2>
+<p id="lesson-intro">Darsni tanlang va o‘qishni boshlang.</p>
+<div id="lesson-list" class="lesson-list">
+<div class="empty-state">Darslar yuklanmoqda...</div>
+</div>
 </div>
 
 <div class="card" id="lesson-area" style="display:none">
-<h3 id="lesson-title"></h3>
-<p id="lesson-text"></p>
-<button class="btn alt" onclick="document.getElementById('lesson-area').style.display='none'">Kurslarga qaytish</button>
+<div class="kicker" id="lesson-number"></div>
+<h2 id="lesson-title"></h2>
+<div class="lesson-meta" id="lesson-duration"></div>
+<div class="lesson-content" id="lesson-text"></div>
+<div id="lesson-video"></div>
+<div class="actions">
+<button class="btn" id="complete-lesson" data-uz="DARSNI TUGATDIM" data-ru="ЗАВЕРШИТЬ УРОК" data-en="MARK AS COMPLETED">DARSNI TUGATDIM</button>
+<button class="btn alt" id="back-lessons" data-uz="DARSLARGA QAYTISH" data-ru="К СПИСКУ УРОКОВ" data-en="BACK TO LESSONS">DARSLARGA QAYTISH</button>
 </div>
+<div id="lesson-status" class="status" role="status" aria-live="polite"></div>
+</div>
+
 </div>
 </section>
 
@@ -193,66 +217,490 @@ footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+"use strict";
+
+/* SUPABASE */
 const SUPABASE_URL="https://tmvfzbmwfsleedpcoihu.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_xPrdlKdlNXOnj3OTjEwIrA_gIHZYMuv";
-const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const client=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 const $=id=>document.getElementById(id);
+
 $("year").textContent=new Date().getFullYear();
 
-$("lang").addEventListener("change",e=>{
-  const l=e.target.value;
-  document.documentElement.lang=l;
-  document.querySelectorAll("[data-"+l+"]").forEach(el=>{
-    el.textContent=el.getAttribute("data-"+l);
-  });
-});
+/* TILLAR */
+const translations={
+  uz:{
+    welcome:"Xush kelibsiz!",
+    loading:"Darslar yuklanmoqda...",
+    noCourse:"Hozircha e’lon qilingan kurs topilmadi.",
+    noLessons:"Bu kursda hozircha e’lon qilingan darslar yo‘q.",
+    loadError:"Ma’lumotlarni yuklashda xatolik: ",
+    lesson:"Dars",
+    completed:"Tugallangan",
+    notCompleted:"Tugallanmagan",
+    minutes:"daqiqa",
+    progress:"ta dars yakunlandi",
+    lessonIntro:"Darsni tanlang va o‘qishni boshlang.",
+    videoReady:"Videoni ochish",
+    noVideo:"Ushbu dars uchun video hali joylanmagan.",
+    complete:"DARSNI TUGATDIM",
+    completedMessage:"Ushbu dars tugallangan.",
+    saved:"Dars tugallangan deb belgilandi!",
+    saveError:"Saqlashda xatolik: ",
+    chooseLesson:"Avval darsni tanlang.",
+    signed:"Tizimga kirilgan: ",
+    logout:"Hisobdan chiqdingiz.",
+    login:"Kirilmoqda...",
+    signup:"So‘rov yuborilmoqda...",
+    signupSuccess:"Hisob yaratildi. Tizimga kirdingiz.",
+    confirmEmail:"Ro‘yxatdan o‘tish so‘rovi qabul qilindi. Pochtangizni tekshiring va tasdiqlash havolasini bosing.",
+    fields:"Ism, familiya, telefon, email va kamida 8 belgili parolni kiriting.",
+    emailPassword:"Email va parolni kiriting.",
+    courseDescription:"Falsafa asoslari, asosiy savollar va falsafiy tafakkur."
+  },
+  ru:{
+    welcome:"Добро пожаловать!",
+    loading:"Загрузка уроков...",
+    noCourse:"Опубликованный курс пока не найден.",
+    noLessons:"В этом курсе пока нет опубликованных уроков.",
+    loadError:"Ошибка загрузки данных: ",
+    lesson:"Урок",
+    completed:"Завершён",
+    notCompleted:"Не завершён",
+    minutes:"минут",
+    progress:"уроков завершено",
+    lessonIntro:"Выберите урок, чтобы начать обучение.",
+    videoReady:"Открыть видео",
+    noVideo:"Видео для этого урока пока не добавлено.",
+    complete:"ЗАВЕРШИТЬ УРОК",
+    completedMessage:"Этот урок уже завершён.",
+    saved:"Урок отмечен как завершённый!",
+    saveError:"Ошибка сохранения: ",
+    chooseLesson:"Сначала выберите урок.",
+    signed:"Вы вошли: ",
+    logout:"Вы вышли из аккаунта.",
+    login:"Выполняется вход...",
+    signup:"Отправка запроса...",
+    signupSuccess:"Аккаунт создан. Вы вошли в систему.",
+    confirmEmail:"Запрос на регистрацию принят. Проверьте почту и перейдите по ссылке подтверждения.",
+    fields:"Введите имя, фамилию, телефон, email и пароль не короче 8 символов.",
+    emailPassword:"Введите email и пароль.",
+    courseDescription:"Основы философии, главные вопросы и философское мышление."
+  },
+  en:{
+    welcome:"Welcome!",
+    loading:"Loading lessons...",
+    noCourse:"No published course was found yet.",
+    noLessons:"There are no published lessons in this course yet.",
+    loadError:"Error loading data: ",
+    lesson:"Lesson",
+    completed:"Completed",
+    notCompleted:"Not completed",
+    minutes:"minutes",
+    progress:"lessons completed",
+    lessonIntro:"Choose a lesson to begin learning.",
+    videoReady:"Open video",
+    noVideo:"A video has not been added to this lesson yet.",
+    complete:"MARK AS COMPLETED",
+    completedMessage:"This lesson has already been completed.",
+    saved:"Lesson marked as completed!",
+    saveError:"Error saving progress: ",
+    chooseLesson:"Please select a lesson first.",
+    signed:"Signed in: ",
+    logout:"You have signed out.",
+    login:"Signing in...",
+    signup:"Submitting request...",
+    signupSuccess:"Account created. You are signed in.",
+    confirmEmail:"Your registration request was received. Check your email and click the confirmation link.",
+    fields:"Enter your first name, last name, phone, email and a password of at least 8 characters.",
+    emailPassword:"Enter your email and password.",
+    courseDescription:"Philosophy basics, fundamental questions and philosophical thinking."
+  }
+};
 
-function status(t){
-  $("status").textContent=t;
+function currentLang(){
+  return $("lang").value||"uz";
+}
+function tr(key){
+  return translations[currentLang()][key]||translations.uz[key]||key;
+}
+function status(message){
+  $("status").textContent=message;
+}
+function lessonStatus(message){
+  $("lesson-status").textContent=message;
 }
 
-function userView(u){
-  $("signed").style.display=u?"block":"none";
-  $("signed").textContent=u?"Signed in: "+u.email:"";
-  $("logout").hidden=!u;
-  $("login").hidden=!!u;
+$("lang").addEventListener("change",()=>{
+  const lang=currentLang();
+  document.documentElement.lang=lang;
 
-  const portal=$("student-portal");
-  document.querySelectorAll("body > section").forEach(s=>{
-    if(s!==portal) s.style.display=u?"none":"";
+  document.querySelectorAll("[data-"+lang+"]").forEach(el=>{
+    el.textContent=el.getAttribute("data-"+lang);
   });
 
-  portal.style.display=u?"block":"none";
+  if(currentUser){
+    renderLessons();
+    updateProgressDisplay();
+    if(activeLesson) showLesson(activeLesson,false);
+  }
+});
 
-  if(u){
-    $("student-name").textContent="Xush kelibsiz! "+(u.email||"");
+/* AUTHENTICATION */
+let currentUser=null;
+let activeCourse=null;
+let lessons=[];
+let completedLessonIds=new Set();
+let activeLesson=null;
+let loadVersion=0;
+
+function userView(user){
+  currentUser=user||null;
+
+  $("signed").style.display=user?"block":"none";
+  $("signed").textContent=user?tr("signed")+(user.email||""):"";
+  $("logout").hidden=!user;
+  $("login").hidden=!!user;
+
+  const portal=$("student-portal");
+
+  document.querySelectorAll("body > section").forEach(section=>{
+    if(section!==portal){
+      section.style.display=user?"none":"";
+    }
+  });
+
+  portal.style.display=user?"block":"none";
+
+  if(user){
+    const metadata=user.user_metadata||{};
+    const fullName=metadata.full_name||
+      [metadata.first_name,metadata.last_name].filter(Boolean).join(" ");
+
+    $("student-name").textContent=
+      (fullName?fullName+" · ":"")+tr("welcome")+" "+(user.email||"");
+
     window.scrollTo(0,0);
+    loadAcademy(user.id);
+  }else{
+    loadVersion++;
+    activeCourse=null;
+    lessons=[];
+    completedLessonIds.clear();
+    activeLesson=null;
+    $("lesson-list").replaceChildren();
+    $("lesson-area").style.display="none";
   }
 }
 
-function openLesson(course){
-  const lessons={
-    intro:[
-      "01 · Falsafaga kirish",
-      "Falsafa — olam, inson, bilim va hayot mazmuni haqidagi fundamental savollarni o‘rganuvchi fan.\n\nFalsafa bizni savol berishga, dalillarni tekshirishga va mustaqil fikrlashga o‘rgatadi.\n\nAsosiy savol: Biz dunyoni qanday anglaymiz?"
-    ],
-    philosophers:[
-      "02 · Buyuk faylasuflar",
-      "Sokrat insonni savol berish orqali haqiqat izlashga chaqirgan.\n\nPlaton g‘oyalar va adolat haqida ta’limot yaratgan.\n\nAristotel mantiq, tabiat va axloqni o‘rgangan.\n\nIbn Sino va Al-Forobiy Sharq falsafasi rivojiga ulkan hissa qo‘shgan."
-    ],
-    logic:[
-      "03 · Mantiq",
-      "Mantiq — to‘g‘ri fikrlash va asosli xulosa chiqarish qoidalarini o‘rganuvchi fan.\n\nDalil — fikrni asoslash uchun keltiriladigan sabab yoki ma’lumot.\n\nTanqidiy fikrlash da’volarni tekshirish, dalillarni solishtirish va xatolarni aniqlashga yordam beradi."
-    ]
-  };
+/* LOAD COURSE AND LESSONS */
+async function loadAcademy(userId){
+  const version=++loadVersion;
 
-  $("lesson-title").textContent=lessons[course][0];
-  $("lesson-text").textContent=lessons[course][1];
-  $("lesson-area").style.display="block";
-  $("lesson-area").scrollIntoView({behavior:"smooth",block:"start"});
+  $("lesson-list").innerHTML=
+    '<div class="empty-state">'+tr("loading")+'</div>';
+
+  $("course-title").textContent=
+    currentLang()==="ru"?"Загрузка курса...":
+    currentLang()==="en"?"Loading course...":"Kurs yuklanmoqda...";
+
+  const {data:course,error:courseError}=await client
+    .from("courses")
+    .select("*")
+    .eq("title","Falsafaga kirish")
+    .eq("published",true)
+    .maybeSingle();
+
+  if(version!==loadVersion||!currentUser||currentUser.id!==userId)return;
+
+  if(courseError){
+    showLoadError(courseError.message);
+    return;
+  }
+
+  if(!course){
+    $("lesson-list").innerHTML=
+      '<div class="empty-state">'+tr("noCourse")+'</div>';
+    $("course-title").textContent=tr("noCourse");
+    return;
+  }
+
+  activeCourse=course;
+  updateCourseText();
+
+  const {data:lessonData,error:lessonError}=await client
+    .from("lessons")
+    .select("*")
+    .eq("course_id",course.id)
+    .eq("published",true)
+    .order("lesson_number",{ascending:true});
+
+  if(version!==loadVersion||!currentUser||currentUser.id!==userId)return;
+
+  if(lessonError){
+    showLoadError(lessonError.message);
+    return;
+  }
+
+  lessons=lessonData||[];
+
+  if(lessons.length===0){
+    $("lesson-list").innerHTML=
+      '<div class="empty-state">'+tr("noLessons")+'</div>';
+    updateProgressDisplay();
+    return;
+  }
+
+  const {data:progressData,error:progressError}=await client
+    .from("lesson_progress")
+    .select("lesson_id,completed")
+    .eq("user_id",userId);
+
+  if(version!==loadVersion||!currentUser||currentUser.id!==userId)return;
+
+  if(progressError){
+    showLoadError(progressError.message);
+    return;
+  }
+
+  const lessonIds=new Set(lessons.map(item=>item.id));
+  completedLessonIds=new Set(
+    (progressData||[])
+      .filter(item=>item.completed&&lessonIds.has(item.lesson_id))
+      .map(item=>item.lesson_id)
+  );
+
+  renderLessons();
+  updateProgressDisplay();
 }
 
+function showLoadError(message){
+  $("lesson-list").innerHTML=
+    '<div class="empty-state">'+escapeHTML(tr("loadError")+message)+'</div>';
+}
+
+function updateCourseText(){
+  if(!activeCourse)return;
+  const lang=currentLang();
+
+  $("course-title").textContent=
+    (lang==="ru"&&activeCourse.title_ru)||
+    (lang==="en"&&activeCourse.title_en)||
+    activeCourse.title;
+
+  $("course-description").textContent=
+    (lang==="ru"&&activeCourse.description_ru)||
+    (lang==="en"&&activeCourse.description_en)||
+    activeCourse.description||
+    tr("courseDescription");
+}
+
+function localizedLessonTitle(lesson){
+  const lang=currentLang();
+  return (lang==="ru"&&lesson.title_ru)||
+    (lang==="en"&&lesson.title_en)||
+    lesson.title||
+    tr("lesson");
+}
+
+function localizedLessonContent(lesson){
+  const lang=currentLang();
+  return (lang==="ru"&&lesson.content_ru)||
+    (lang==="en"&&lesson.content_en)||
+    lesson.content||
+    "";
+}
+
+/* SAFE TEXT OUTPUT */
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+/* LESSON LIST */
+function renderLessons(){
+  const container=$("lesson-list");
+  container.replaceChildren();
+
+  if(!lessons.length){
+    container.innerHTML=
+      '<div class="empty-state">'+tr("noLessons")+'</div>';
+    return;
+  }
+
+  lessons.forEach((lesson,index)=>{
+    const isCompleted=completedLessonIds.has(lesson.id);
+    const number=lesson.lesson_number||index+1;
+
+    const item=document.createElement("article");
+    item.className="lesson-item";
+
+    const info=document.createElement("div");
+    const numberEl=document.createElement("div");
+    numberEl.className="lesson-number";
+    numberEl.textContent=tr("lesson")+" "+String(number).padStart(2,"0");
+
+    const title=document.createElement("h4");
+    title.textContent=localizedLessonTitle(lesson);
+
+    const duration=document.createElement("p");
+    duration.textContent=(lesson.duration_minutes||20)+" "+tr("minutes");
+
+    info.append(numberEl,title,duration);
+
+    const action=document.createElement("div");
+    action.style.textAlign="right";
+
+    const state=document.createElement("div");
+    state.className="lesson-state";
+    state.textContent=isCompleted?"✓ "+tr("completed"):tr("notCompleted");
+
+    const button=document.createElement("button");
+    button.className="btn alt";
+    button.style.marginTop="9px";
+    button.textContent=currentLang()==="ru"?"ОТКРЫТЬ":
+      currentLang()==="en"?"OPEN":"OCHISH";
+    button.addEventListener("click",()=>showLesson(lesson));
+
+    action.append(state,button);
+    item.append(info,action);
+    container.append(item);
+  });
+}
+
+/* PROGRESS */
+function updateProgressDisplay(){
+  const total=lessons.length;
+  const completed=completedLessonIds.size;
+  const percent=total?Math.round(completed/total*100):0;
+
+  $("progress-label").textContent=percent+"%";
+  $("progress-fill").style.width=percent+"%";
+
+  $("progress-detail").textContent=
+    completed+" / "+total+" "+tr("progress");
+}
+
+/* OPEN LESSON */
+function showLesson(lesson,scroll=true){
+  activeLesson=lesson;
+
+  $("lesson-area").style.display="block";
+
+  const number=lesson.lesson_number||"";
+  $("lesson-number").textContent=
+    tr("lesson")+" "+number;
+
+  $("lesson-title").textContent=localizedLessonTitle(lesson);
+  $("lesson-text").textContent=localizedLessonContent(lesson);
+
+  $("lesson-duration").textContent=
+    (lesson.duration_minutes||20)+" "+tr("minutes");
+
+  const videoContainer=$("lesson-video");
+  videoContainer.replaceChildren();
+
+  if(lesson.video_url){
+    try{
+      const videoUrl=new URL(lesson.video_url);
+      if(videoUrl.protocol==="https:"){
+        const link=document.createElement("a");
+        link.href=videoUrl.href;
+        link.target="_blank";
+        link.rel="noopener noreferrer";
+        link.className="video-link";
+        link.textContent="▶ "+tr("videoReady");
+        videoContainer.append(link);
+      }else{
+        videoContainer.textContent=tr("noVideo");
+      }
+    }catch(error){
+      videoContainer.textContent=tr("noVideo");
+    }
+  }else{
+    const noVideo=document.createElement("p");
+    noVideo.textContent=tr("noVideo");
+    videoContainer.append(noVideo);
+  }
+
+  const completed=completedLessonIds.has(lesson.id);
+  const completeButton=$("complete-lesson");
+
+  completeButton.disabled=completed;
+  completeButton.textContent=completed?tr("completedMessage"):tr("complete");
+
+  lessonStatus(completed?tr("completedMessage"):"");
+
+  if(scroll){
+    $("lesson-area").scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+  }
+}
+
+/* MARK LESSON COMPLETED */
+$("complete-lesson").addEventListener("click",async()=>{
+  if(!currentUser||!activeLesson){
+    lessonStatus(tr("chooseLesson"));
+    return;
+  }
+
+  if(completedLessonIds.has(activeLesson.id)){
+    lessonStatus(tr("completedMessage"));
+    return;
+  }
+
+  const button=$("complete-lesson");
+  button.disabled=true;
+  lessonStatus(currentLang()==="ru"?"Сохранение...":
+    currentLang()==="en"?"Saving...":"Saqlanmoqda...");
+
+  const {error}=await client
+    .from("lesson_progress")
+    .upsert({
+      user_id:currentUser.id,
+      lesson_id:activeLesson.id,
+      completed:true,
+      completed_at:new Date().toISOString()
+    },{
+      onConflict:"user_id,lesson_id"
+    });
+
+  if(error){
+    button.disabled=false;
+    lessonStatus(tr("saveError")+error.message);
+    return;
+  }
+
+  completedLessonIds.add(activeLesson.id);
+  renderLessons();
+  updateProgressDisplay();
+  button.disabled=true;
+  button.textContent=tr("completedMessage");
+  lessonStatus(tr("saved"));
+});
+
+/* BACK TO LESSON LIST */
+$("back-lessons").addEventListener("click",()=>{
+  $("lesson-area").style.display="none";
+  activeLesson=null;
+  $("lesson-list").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+});
+
+/* SIGN UP */
 $("signup").onclick=async()=>{
   const first=$("su-first").value.trim();
   const last=$("su-last").value.trim();
@@ -261,76 +709,106 @@ $("signup").onclick=async()=>{
   const password=$("su-pass").value;
 
   if(!first||!last||!phone||!email||password.length<8){
-    status("Ism, familiya, telefon, email va kamida 8 belgili parolni kiriting.");
+    status(tr("fields"));
     return;
   }
 
-  status("So‘rov yuborilmoqda...");
+  status(tr("signup"));
+  $("signup").disabled=true;
 
-  const {data,error}=await client.auth.signUp({
-    email,
-    password,
-    options:{
-      emailRedirectTo:location.origin,
-      data:{
-        first_name:first,
-        last_name:last,
-        full_name:first+" "+last,
-        phone:phone
+  try{
+    const {data,error}=await client.auth.signUp({
+      email,
+      password,
+      options:{
+        emailRedirectTo:location.origin,
+        data:{
+          first_name:first,
+          last_name:last,
+          full_name:first+" "+last,
+          phone:phone
+        }
       }
+    });
+
+    if(error){
+      status(error.message);
+      return;
     }
-  });
 
-  if(error){
-    status(error.message);
-    return;
-  }
-
-  if(data.session){
-    userView(data.user);
-    status("Hisob yaratildi. Tizimga kirdingiz.");
-  }else{
-    status("Ro‘yxatdan o‘tish so‘rovi qabul qilindi. Pochtangizni tekshiring va tasdiqlash havolasini bosing.");
+    if(data.session){
+      userView(data.user);
+      status(tr("signupSuccess"));
+    }else{
+      status(tr("confirmEmail"));
+    }
+  }catch(error){
+    status(error.message||String(error));
+  }finally{
+    $("signup").disabled=false;
   }
 };
 
+/* SIGN IN */
 $("login").onclick=async()=>{
   const email=$("li-email").value.trim();
   const password=$("li-pass").value;
 
   if(!email||!password){
-    status("Email va parolni kiriting.");
+    status(tr("emailPassword"));
     return;
   }
 
-  status("Kirilmoqda...");
+  status(tr("login"));
+  $("login").disabled=true;
 
-  const {data,error}=await client.auth.signInWithPassword({email,password});
+  try{
+    const {data,error}=await client.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if(error){
+      status(error.message);
+      return;
+    }
+
+    userView(data.user);
+    status(currentLang()==="ru"?"Вы успешно вошли.":
+      currentLang()==="en"?"You have successfully signed in.":
+      "Muvaffaqiyatli kirdingiz.");
+  }catch(error){
+    status(error.message||String(error));
+  }finally{
+    $("login").disabled=false;
+  }
+};
+
+/* SIGN OUT */
+async function logoutUser(){
+  const {error}=await client.auth.signOut();
 
   if(error){
     status(error.message);
-    return;
+  }else{
+    status(tr("logout"));
   }
-
-  userView(data.user);
-  status("Muvaffaqiyatli kirdingiz.");
-};
-
-async function logoutUser(){
-  const {error}=await client.auth.signOut();
-  if(error) status(error.message);
-  else status("Hisobdan chiqdingiz.");
 }
 
 $("logout").onclick=logoutUser;
 $("portal-logout").onclick=logoutUser;
 
-client.auth.getSession().then(({data})=>{
-  userView(data.session?.user||null);
-});
-
+/* AUTH SESSION */
 client.auth.onAuthStateChange((_event,session)=>{
   userView(session?.user||null);
+});
+
+client.auth.getSession().then(({data,error})=>{
+  if(error){
+    status(error.message);
+    return;
+  }
+  userView(data.session?.user||null);
 });
 </script>
 </body>
