@@ -1,814 +1,616 @@
-doctype html>
-<html lang="uz">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FALSAFA AKADEMIYASI</title>
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FALSAFA AKADEMIYASI</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#080b10;--gold:#d7ad62;--pale:#f0d69a;--muted:#c1c4ca}
+:root{
+  --bg:#080b10;--panel:#121720;--panel2:#191f29;
+  --gold:#d7ad62;--pale:#f0d69a;--text:#f4f1e9;
+  --muted:#aeb5c0;--border:#303744;--green:#64c99a;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#f7f3eb;font-family:Georgia,serif}
-.wrap{width:min(1100px,92%);margin:auto}
-header{border-bottom:1px solid #ffffff22;padding:22px 0}
-.nav{display:flex;justify-content:space-between;align-items:center;gap:15px}
-.brand{color:var(--pale);letter-spacing:2px;font-weight:bold}
-.brand small{display:block;font:10px Arial;letter-spacing:3px;margin-top:5px;color:#ddd}
-select,input{background:#0b111a;color:#fff;border:1px solid #ffffff35;padding:12px;border-radius:3px}
-.hero{min-height:480px;display:flex;align-items:center;background:linear-gradient(90deg,#080b10 15%,#080b10c9),url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1600&q=80') center/cover}
-.hero h1{font-size:clamp(42px,8vw,78px);line-height:1;color:var(--pale);font-weight:500}
-.lead,p{font:15px/1.8 Arial;color:var(--muted);max-width:700px}
-.kicker{font:11px Arial;letter-spacing:4px;color:var(--gold);text-transform:uppercase}
-section{padding:65px 0}
-h2{font-size:38px;color:var(--pale);font-weight:500}
-.btn{padding:13px 20px;background:var(--gold);color:#101010;border:1px solid var(--gold);cursor:pointer;font:12px Arial;letter-spacing:1px}
-.btn.alt{background:transparent;color:var(--pale)}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif;padding-bottom:90px}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{padding:17px 20px;border-bottom:1px solid var(--border);
+display:flex;align-items:center;justify-content:space-between;gap:12px;
+position:sticky;top:0;background:#080b10ee;z-index:10;backdrop-filter:blur(12px)}
+.logo{font-family:Georgia,serif;color:var(--gold);font-weight:bold;
+letter-spacing:1.5px;font-size:17px}
+.lang{background:var(--panel);color:var(--gold);border:1px solid var(--border);
+padding:8px;border-radius:9px}
+main{max-width:950px;margin:auto;padding:20px}
+.hero{min-height:230px;border-radius:20px;padding:28px;
+background:linear-gradient(90deg,#080b10f5,#080b1099),
+url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1600&q=80') center/cover;
+display:flex;flex-direction:column;justify-content:center;margin-bottom:22px}
+h1,h2,h3{font-family:Georgia,serif}
+.hero h1{font-size:clamp(27px,5vw,43px);color:var(--pale);margin:0 0 12px}
+.hero p{color:#e0ded8;line-height:1.6;max-width:570px}
+.gold{color:var(--gold)}
+.muted{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--border);
+border-radius:17px;padding:18px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
+.stat{background:var(--panel2);padding:17px;border-radius:14px;border:1px solid var(--border)}
+.stat strong{display:block;font-size:27px;color:var(--gold);margin-top:7px}
+.btn{border:0;border-radius:11px;padding:12px 17px;background:var(--gold);
+color:#17130c;font-weight:bold}
+.btn:hover{filter:brightness(1.08)}
+.btn.secondary{background:var(--panel2);color:var(--gold);border:1px solid var(--border)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.grid,.auth{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.auth{grid-template-columns:1fr 1fr}
-.card{background:#111925;border:1px solid #d7ad6240;padding:24px}
-.card h3{color:var(--pale);font-weight:500}
-.dark{background:#0d131c;border-block:1px solid #ffffff12}
-.auth label{display:block;font:12px Arial;color:var(--pale);margin:15px 0 7px}
-.auth input{width:100%}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-.status{font:13px/1.6 Arial;color:var(--pale);margin-top:18px;overflow-wrap:anywhere}
-.signed{display:none;font:13px Arial;color:var(--muted);padding:12px;border:1px solid #d7ad6240;margin-top:12px}
-footer{padding:28px 0;border-top:1px solid #d7ad6240;color:#999;font:12px Arial}
-footer a{color:var(--pale)}
-#student-portal{display:none;min-height:75vh;padding:45px 0}
-.portal-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:30px}
-.portal-welcome{margin-bottom:35px}
-.portal-welcome h2{margin-bottom:8px}
-.portal-card{min-height:210px}
-.portal-card p{min-height:55px}
-.portal-progress{margin-top:30px}
-.portal-progress progress{width:100%;height:12px;accent-color:var(--gold)}
-#lesson-area{margin-top:25px}
-#lesson-text{white-space:pre-line}
-.lesson-list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
-.lesson-item{background:#111925;border:1px solid #d7ad6240;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.lesson-item h4{margin:0 0 7px;color:var(--pale);font-weight:500;font-size:17px}
-.lesson-item p{font-size:12px;margin:0}
-.lesson-number{font:12px Arial;color:var(--gold);margin-bottom:8px}
-.lesson-state{font:11px Arial;color:#aaa;white-space:nowrap}
-.progress-line{height:8px;background:#27303b;margin:15px 0;border-radius:10px;overflow:hidden}
-.progress-fill{height:100%;width:0;background:var(--gold);transition:width .3s}
-.lesson-content{line-height:1.9;color:var(--muted);font:15px/1.9 Arial;white-space:pre-line}
-.lesson-meta{font:12px Arial;color:var(--gold);margin:12px 0}
-.video-link{display:inline-block;margin:15px 0;color:var(--pale);font:13px Arial}
-.empty-state{padding:22px;background:#111925;border:1px solid #d7ad6240;color:var(--muted);font:14px/1.7 Arial}
-@media(max-width:700px){
-.grid,.auth,.lesson-list{grid-template-columns:1fr}
-.hero{min-height:430px}
-.portal-card{min-height:0}
-.lesson-item{align-items:flex-start}
-h2{font-size:30px}
+input{width:100%;padding:13px;margin:6px 0 12px;background:#0b1018;
+border:1px solid var(--border);border-radius:10px;color:white}
+label{color:var(--muted);font-size:13px}
+.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.course,.lesson,.mission{background:var(--panel2);border:1px solid var(--border);
+padding:16px;border-radius:14px;margin:10px 0}
+.course h3,.lesson h3{margin:0 0 8px;color:var(--pale)}
+.lesson{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.lesson small{color:var(--muted)}
+.lesson.locked{opacity:.55}
+.lesson.done{border-color:#397b60}
+.progress{height:9px;background:#303744;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:var(--gold);width:0%;transition:width .3s}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;
+background:#302719;color:var(--gold);font-size:12px}
+.lesson-content{white-space:pre-wrap;line-height:1.8;color:#e3e3e3}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:20;
+background:#10151eee;border-top:1px solid var(--border);
+display:flex;justify-content:center;backdrop-filter:blur(14px);
+padding:9px 4px calc(9px + env(safe-area-inset-bottom))}
+.nav-inner{width:100%;max-width:650px;display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.nav-btn{background:transparent;border:0;color:var(--muted);padding:7px 2px;
+border-radius:10px;font-size:11px;display:flex;flex-direction:column;
+align-items:center;gap:5px}
+.nav-btn span{font-size:20px}
+.nav-btn.active{color:var(--gold);background:#292319}
+.page{display:none}
+.page.active{display:block}
+.notice{padding:12px;border-radius:10px;background:#292319;color:var(--pale);
+margin:10px 0;line-height:1.5}
+#toast{position:fixed;top:75px;left:50%;transform:translateX(-50%);
+background:#252c36;color:white;padding:12px 18px;border-radius:12px;
+z-index:100;display:none;max-width:90%;box-shadow:0 8px 25px #0008}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 10px}
+.hidden{display:none!important}
+@media(max-width:650px){
+ main{padding:14px}
+ .auth-grid{grid-template-columns:1fr}
+ .hero{padding:22px;min-height:210px}
+ header{padding:14px}
+ .logo{font-size:14px}
+ .lesson{align-items:flex-start}
+ .lesson .btn{padding:9px 11px;font-size:12px}
 }
 </style>
 </head>
-
 <body>
 
 <header>
-<div class="wrap nav">
-<div class="brand">FALSAFA AKADEMIYASI
-<small>BILIM · TAFAKKUR · INSONIYAT</small>
-</div>
-<select id="lang" aria-label="Language">
-<option value="uz">UZ</option>
-<option value="ru">RU</option>
-<option value="en">EN</option>
-</select>
-</div>
+  <div class="logo">FALSAFA AKADEMIYASI</div>
+  <select class="lang" id="language" onchange="changeLanguage()">
+    <option value="ru">RU</option>
+    <option value="uz">UZ</option>
+    <option value="en">EN</option>
+  </select>
 </header>
 
-<section class="hero">
-<div class="wrap">
-<div class="kicker" data-uz="Mustaqil fikrlash sari yo‘l" data-ru="Путь к самостоятельному мышлению" data-en="A journey toward independent thought">Mustaqil fikrlash sari yo‘l</div>
-<h1>FALSAFA<br>AKADEMIYASI</h1>
-<p data-uz="Falsafa orqali olamni anglang, savol berishni o‘rganing va mustaqil tafakkuringizni rivojlantiring. Barcha uchun ochiq bepul ta’lim." data-ru="Познайте мир через философию, учитесь задавать вопросы и развивайте самостоятельное мышление. Бесплатное образование для всех." data-en="Explore the world through philosophy, learn to ask meaningful questions, and develop independent thinking. Free education for all.">Falsafa orqali olamni anglang, savol berishni o‘rganing va mustaqil tafakkuringizni rivojlantiring. Barcha uchun ochiq bepul ta’lim.</p>
-<a class="btn" href="#account" data-uz="RO‘YXATDAN O‘TISH" data-ru="РЕГИСТРАЦИЯ" data-en="REGISTER">RO‘YXATDAN O‘TISH</a>
-</div>
-</section>
+<div id="toast"></div>
 
-<section>
-<div class="wrap">
-<div class="kicker">AKADEMIYA</div>
-<h2 data-uz="Bilim — erkin tafakkur poydevori" data-ru="Знание — основа свободного мышления" data-en="Knowledge is the foundation of free thought">Bilim — erkin tafakkur poydevori</h2>
-<p data-uz="Falsafa Akademiyasi — falsafiy bilimlarni keng ommaga yetkazish, mantiqiy fikrlash va savol berish madaniyatini rivojlantirishga bag‘ishlangan ta’lim tashabbusi." data-ru="Философская академия — образовательная инициатива, делающая философские знания доступнее и развивающая логическое мышление." data-en="Falsafa Akademiyasi makes philosophical knowledge accessible and nurtures logical reasoning and a culture of inquiry.">Falsafa Akademiyasi — falsafiy bilimlarni keng ommaga yetkazish, mantiqiy fikrlash va savol berish madaniyatini rivojlantirishga bag‘ishlangan ta’lim tashabbusi.</p>
-</div>
-</section>
+<main>
+  <!-- AUTH -->
+  <section id="auth-section">
+    <div class="hero">
+      <h1>Fikrla. Izla. Angla.</h1>
+      <p>Falsafani o‘rganing, mustaqil fikrlang va dunyoqarashingizni kengaytiring.</p>
+    </div>
 
-<section class="dark">
-<div class="wrap">
-<div class="kicker">TA’LIM YO‘NALISHLARI</div>
-<h2 data-uz="Kurslar" data-ru="Курсы" data-en="Courses">Kurslar</h2>
-<div class="grid">
-<article class="card"><h3>Falsafaga kirish</h3><p>Asosiy savollar, falsafiy tafakkur va buyuk mutafakkirlar bilan tanishuv.</p></article>
-<article class="card"><h3>Mantiq va tanqidiy fikrlash</h3><p>Dalillarni tahlil qilish, xatolarni aniqlash va mustaqil xulosa chiqarish.</p></article>
-<article class="card"><h3>Inson va jamiyat</h3><p>Axloq, erkinlik, adolat va insoniyat kelajagi haqidagi munozaralar.</p></article>
-</div>
-</div>
-</section>
+    <div class="panel">
+      <h2 class="gold">Akademiyaga xush kelibsiz</h2>
+      <p class="muted">O‘qishni davom ettirish uchun hisobingizga kiring yoki ro‘yxatdan o‘ting.</p>
+      <div class="auth-grid">
+        <div>
+          <h3>Ro‘yxatdan o‘tish</h3>
+          <label>Ism</label>
+          <input id="reg-first" placeholder="Ismingiz">
+          <label>Familiya</label>
+          <input id="reg-last" placeholder="Familiyangiz">
+          <label>Telefon</label>
+          <input id="reg-phone" placeholder="+998">
+          <label>Email</label>
+          <input id="reg-email" type="email" placeholder="email@example.com">
+          <label>Parol</label>
+          <input id="reg-pass" type="password" placeholder="Kamida 6 belgi">
+          <button class="btn" onclick="register()">Ro‘yxatdan o‘tish</button>
+        </div>
+        <div>
+          <h3>Tizimga kirish</h3>
+          <label>Email</label>
+          <input id="login-email" type="email" placeholder="email@example.com">
+          <label>Parol</label>
+          <input id="login-pass" type="password" placeholder="Parolingiz">
+          <button class="btn" onclick="login()">Kirish</button>
+          <p class="muted" style="font-size:13px">Agar emailingizni tasdiqlash so‘ralsa, pochtangizga yuborilgan havolani bosing.</p>
+        </div>
+      </div>
+      <p id="auth-message" class="muted"></p>
+    </div>
+  </section>
 
-<section id="account">
-<div class="wrap">
-<div class="kicker">TALABALAR PORTALI</div>
-<h2 data-uz="Ro‘yxatdan o‘ting yoki tizimga kiring" data-ru="Регистрация или вход" data-en="Create an account or sign in">Ro‘yxatdan o‘ting yoki tizimga kiring</h2>
-<p data-uz="Akademiya kurslariga qo‘shilish uchun elektron pochtangizdan foydalaning." data-ru="Используйте электронную почту, чтобы присоединиться к курсам академии." data-en="Use your email address to join the academy courses.">Akademiya kurslariga qo‘shilish uchun elektron pochtangizdan foydalaning.</p>
+  <!-- STUDENT APP -->
+  <section id="app-section" class="hidden">
 
-<div class="auth">
-<div class="card">
-<h3 data-uz="Yangi hisob yaratish" data-ru="Создать аккаунт" data-en="Create an account">Yangi hisob yaratish</h3>
-<label data-uz="Ism" data-ru="Имя" data-en="First name">Ism</label>
-<input id="su-first" type="text" autocomplete="given-name" placeholder="Ism">
-<label data-uz="Familiya" data-ru="Фамилия" data-en="Last name">Familiya</label>
-<input id="su-last" type="text" autocomplete="family-name" placeholder="Familiya">
-<label data-uz="Telefon raqami" data-ru="Номер телефона" data-en="Phone number">Telefon raqami</label>
-<input id="su-phone" type="tel" autocomplete="tel" placeholder="+998 90 123 45 67">
-<label>Email</label>
-<input id="su-email" type="email" autocomplete="email" placeholder="name@example.com">
-<label data-uz="Parol (kamida 8 belgi)" data-ru="Пароль (минимум 8 символов)" data-en="Password (at least 8 characters)">Parol (kamida 8 belgi)</label>
-<input id="su-pass" type="password" minlength="8" autocomplete="new-password">
-<div class="actions"><button class="btn" id="signup" data-uz="RO‘YXATDAN O‘TISH" data-ru="ЗАРЕГИСТРИРОВАТЬСЯ" data-en="REGISTER">RO‘YXATDAN O‘TISH</button></div>
-</div>
+    <section id="page-home" class="page active">
+      <div class="hero">
+        <h1 id="welcome-title">Xush kelibsiz!</h1>
+        <p>Bilim — insonning eng katta boyligi. Bugun ham yangi narsani o‘rganing.</p>
+        <button class="btn" style="width:max-content" onclick="showPage('learning')">O‘qishni davom ettirish</button>
+      </div>
+      <div class="grid">
+        <div class="stat"><span class="muted">Jami XP ball</span><strong id="home-xp">0</strong></div>
+        <div class="stat"><span class="muted">Tugallangan darslar</span><strong id="home-done">0</strong></div>
+        <div class="stat"><span class="muted">O‘quv jarayoni</span><strong id="home-percent">0%</strong></div>
+      </div>
+      <div class="panel">
+        <h2 class="gold">Mening rivojlanishim</h2>
+        <div class="progress"><div id="home-progress"></div></div>
+        <p class="muted" id="home-progress-text">Darslarni tugatib, keyingi bosqichlarni oching.</p>
+      </div>
+      <div class="panel">
+        <h2 class="gold">Bugungi maqsad</h2>
+        <p>Bugun kamida bitta darsni yakunlang va bilim sari yana bir qadam tashlang.</p>
+        <button class="btn secondary" onclick="showPage('missions')">Missiyalarni ko‘rish</button>
+      </div>
+    </section>
 
-<div class="card">
-<h3 data-uz="Hisobga kirish" data-ru="Войти в аккаунт" data-en="Sign in">Hisobga kirish</h3>
-<label>Email</label>
-<input id="li-email" type="email" autocomplete="email" placeholder="name@example.com">
-<label data-uz="Parol" data-ru="Пароль" data-en="Password">Parol</label>
-<input id="li-pass" type="password" autocomplete="current-password">
-<div class="actions">
-<button class="btn alt" id="login" data-uz="KIRISH" data-ru="ВОЙТИ" data-en="SIGN IN">KIRISH</button>
-<button class="btn alt" id="logout" hidden data-uz="CHIQISH" data-ru="ВЫЙТИ" data-en="SIGN OUT">CHIQISH</button>
-</div>
-<div id="signed" class="signed"></div>
-</div>
-</div>
-<div id="status" class="status" role="status" aria-live="polite"></div>
-</div>
-</section>
+    <section id="page-learning" class="page">
+      <h2 class="gold">Mening ta’limim</h2>
+      <p class="muted">Kursni tanlang va darslarni ketma-ket o‘rganing.</p>
+      <div id="courses-list"></div>
+      <div id="lessons-area" class="hidden">
+        <div class="panel">
+          <button class="btn secondary" onclick="backToCourses()">← Kurslarga qaytish</button>
+          <h2 id="selected-course-title" class="gold"></h2>
+          <p id="selected-course-description" class="muted"></p>
+          <div class="progress"><div id="course-progress"></div></div>
+          <p id="course-progress-text" class="muted"></p>
+        </div>
+        <div id="lessons-list"></div>
+      </div>
+      <div id="lesson-view" class="panel hidden">
+        <button class="btn secondary" onclick="backToLessons()">← Darslarga qaytish</button>
+        <h2 id="lesson-heading" class="gold"></h2>
+        <p id="lesson-duration" class="muted"></p>
+        <div id="lesson-body" class="lesson-content"></div>
+        <div id="lesson-video"></div>
+        <div class="notice">Darsni diqqat bilan o‘qing. Tugatganingizdan so‘ng pastdagi tugmani bosing.</div>
+        <button id="complete-lesson-btn" class="btn" onclick="completeCurrentLesson()">✓ Darsni tugatdim</button>
+      </div>
+    </section>
 
-<!-- TALABA SHAXSIY KABINETI -->
-<section id="student-portal">
-<div class="wrap">
+    <section id="page-missions" class="page">
+      <h2 class="gold">Kunlik missiyalar</h2>
+      <p class="muted">Missiyalarni bajaring va qo‘shimcha XP to‘plang.</p>
+      <div class="grid">
+        <div class="stat"><span class="muted">Mening XP ballim</span><strong id="mission-xp">0</strong></div>
+        <div class="stat"><span class="muted">Bajarilgan missiyalar</span><strong id="mission-done">0</strong></div>
+      </div>
+      <div id="missions-list"></div>
+      <div class="notice">Darsni yakunlaganingizda mavjud missiyalar avtomatik tekshiriladi.</div>
+    </section>
 
-<div class="portal-top">
-<div class="brand">FALSAFA AKADEMIYASI
-<small data-uz="SHAXSIY KABINET" data-ru="ЛИЧНЫЙ КАБИНЕТ" data-en="STUDENT DASHBOARD">SHAXSIY KABINET</small>
-</div>
-<button class="btn alt" id="portal-logout" data-uz="CHIQISH" data-ru="ВЫЙТИ" data-en="SIGN OUT">CHIQISH</button>
-</div>
+    <section id="page-ranking" class="page">
+      <h2 class="gold">O‘quvchilar reytingi</h2>
+      <div class="panel">
+        <div style="font-size:38px;text-align:center">🏆</div>
+        <h3 style="text-align:center">Bilim sari intiling!</h3>
+        <p class="muted" style="text-align:center">Reyting bo‘limi tayyorlanmoqda. Hozircha o‘z XP ballaringiz va natijalaringizni kuzatishingiz mumkin.</p>
+        <div class="stat">
+          <span class="muted">Siz to‘plagan XP</span>
+          <strong id="ranking-xp">0</strong>
+        </div>
+      </div>
+    </section>
 
-<div class="portal-welcome">
-<div class="kicker" data-uz="TALABALAR PORTALI" data-ru="ПОРТАЛ СТУДЕНТА" data-en="STUDENT PORTAL">TALABALAR PORTALI</div>
-<h2 data-uz="Shaxsiy kabinet" data-ru="Личный кабинет" data-en="Student dashboard">Shaxsiy kabinet</h2>
-<p id="student-name">Xush kelibsiz!</p>
-</div>
+    <section id="page-profile" class="page">
+      <h2 class="gold">Mening profilim</h2>
+      <div class="panel">
+        <div style="font-size:42px">👤</div>
+        <h2 id="profile-name">O‘quvchi</h2>
+        <p class="muted" id="profile-email"></p>
+        <div class="grid">
+          <div class="stat"><span class="muted">XP</span><strong id="profile-xp">0</strong></div>
+          <div class="stat"><span class="muted">Tugallangan darslar</span><strong id="profile-done">0</strong></div>
+        </div>
+        <button class="btn secondary" onclick="logout()">Hisobdan chiqish</button>
+      </div>
+      <div class="panel">
+        <h3 class="gold">Akademiya haqida</h3>
+        <p class="muted">FALSAFA AKADEMIYASI — falsafiy tafakkur, bilim va mustaqil fikrlashni rivojlantirishga qaratilgan bepul ta’lim loyihasi.</p>
+      </div>
+    </section>
+  </section>
+</main>
 
-<div class="card">
-<div class="kicker" data-uz="MENING KURSIM" data-ru="МОЙ КУРС" data-en="MY COURSE">MENING KURSIM</div>
-<h2 id="course-title">Falsafaga kirish</h2>
-<p id="course-description">Falsafa asoslari va mustaqil tafakkur.</p>
-<div class="portal-progress">
-<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-<strong data-uz="O‘quv jarayoni" data-ru="Учебный процесс" data-en="Learning progress">O‘quv jarayoni</strong>
-<strong id="progress-label">0%</strong>
-</div>
-<div class="progress-line"><div class="progress-fill" id="progress-fill"></div></div>
-<p id="progress-detail">0 / 20 dars yakunlandi</p>
-</div>
-</div>
+<nav id="bottom-nav" class="bottom-nav hidden">
+  <div class="nav-inner">
+    <button class="nav-btn active" data-page="home" onclick="showPage('home')"><span>⌂</span>Главная</button>
+    <button class="nav-btn" data-page="learning" onclick="showPage('learning')"><span>📚</span>Обучение</button>
+    <button class="nav-btn" data-page="missions" onclick="showPage('missions')"><span>🎯</span>Миссии</button>
+    <button class="nav-btn" data-page="ranking" onclick="showPage('ranking')"><span>🏆</span>Рейтинг</button>
+    <button class="nav-btn" data-page="profile" onclick="showPage('profile')"><span>👤</span>Профиль</button>
+  </div>
+</nav>
 
-<div style="margin-top:35px">
-<div class="kicker" data-uz="KURS DASTURI" data-ru="ПРОГРАММА КУРСА" data-en="COURSE CURRICULUM">KURS DASTURI</div>
-<h2 data-uz="Darslar" data-ru="Уроки" data-en="Lessons">Darslar</h2>
-<p id="lesson-intro">Darsni tanlang va o‘qishni boshlang.</p>
-<div id="lesson-list" class="lesson-list">
-<div class="empty-state">Darslar yuklanmoqda...</div>
-</div>
-</div>
+<footer>FALSAFA AKADEMIYASI · +998 94 115 27 55</footer>
 
-<div class="card" id="lesson-area" style="display:none">
-<div class="kicker" id="lesson-number"></div>
-<h2 id="lesson-title"></h2>
-<div class="lesson-meta" id="lesson-duration"></div>
-<div class="lesson-content" id="lesson-text"></div>
-<div id="lesson-video"></div>
-<div class="actions">
-<button class="btn" id="complete-lesson" data-uz="DARSNI TUGATDIM" data-ru="ЗАВЕРШИТЬ УРОК" data-en="MARK AS COMPLETED">DARSNI TUGATDIM</button>
-<button class="btn alt" id="back-lessons" data-uz="DARSLARGA QAYTISH" data-ru="К СПИСКУ УРОКОВ" data-en="BACK TO LESSONS">DARSLARGA QAYTISH</button>
-</div>
-<div id="lesson-status" class="status" role="status" aria-live="polite"></div>
-</div>
-
-</div>
-</section>
-
-<footer>
-<div class="wrap">
-© <span id="year"></span> FALSAFA AKADEMIYASI · Asoschi: Jasur Makhamedzakirov<br>
-<a href="tel:+998941152755">+998 94 115 27 55</a>
-</div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-"use strict";
+const SUPABASE_URL = "https://tmvfzbmwfsleedpcoihu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_xPrdlKdlNXOnj3OTjEwIrA_gIHZYMuv";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* SUPABASE */
-const SUPABASE_URL="https://tmvfzbmwfsleedpcoihu.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_xPrdlKdlNXOnj3OTjEwIrA_gIHZYMuv";
-const client=window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+let currentUser = null;
+let currentCourse = null;
+let currentLesson = null;
+let accessibleLessons = [];
+let completedLessonIds = [];
+let totalXP = 0;
+let completedCount = 0;
+let activeLanguage = "ru";
 
-const $=id=>document.getElementById(id);
-
-$("year").textContent=new Date().getFullYear();
-
-/* TILLAR */
-const translations={
-  uz:{
-    welcome:"Xush kelibsiz!",
-    loading:"Darslar yuklanmoqda...",
-    noCourse:"Hozircha e’lon qilingan kurs topilmadi.",
-    noLessons:"Bu kursda hozircha e’lon qilingan darslar yo‘q.",
-    loadError:"Ma’lumotlarni yuklashda xatolik: ",
-    lesson:"Dars",
-    completed:"Tugallangan",
-    notCompleted:"Tugallanmagan",
-    minutes:"daqiqa",
-    progress:"ta dars yakunlandi",
-    lessonIntro:"Darsni tanlang va o‘qishni boshlang.",
-    videoReady:"Videoni ochish",
-    noVideo:"Ushbu dars uchun video hali joylanmagan.",
-    complete:"DARSNI TUGATDIM",
-    completedMessage:"Ushbu dars tugallangan.",
-    saved:"Dars tugallangan deb belgilandi!",
-    saveError:"Saqlashda xatolik: ",
-    chooseLesson:"Avval darsni tanlang.",
-    signed:"Tizimga kirilgan: ",
-    logout:"Hisobdan chiqdingiz.",
-    login:"Kirilmoqda...",
-    signup:"So‘rov yuborilmoqda...",
-    signupSuccess:"Hisob yaratildi. Tizimga kirdingiz.",
-    confirmEmail:"Ro‘yxatdan o‘tish so‘rovi qabul qilindi. Pochtangizni tekshiring va tasdiqlash havolasini bosing.",
-    fields:"Ism, familiya, telefon, email va kamida 8 belgili parolni kiriting.",
-    emailPassword:"Email va parolni kiriting.",
-    courseDescription:"Falsafa asoslari, asosiy savollar va falsafiy tafakkur."
-  },
-  ru:{
-    welcome:"Добро пожаловать!",
-    loading:"Загрузка уроков...",
-    noCourse:"Опубликованный курс пока не найден.",
-    noLessons:"В этом курсе пока нет опубликованных уроков.",
-    loadError:"Ошибка загрузки данных: ",
-    lesson:"Урок",
-    completed:"Завершён",
-    notCompleted:"Не завершён",
-    minutes:"минут",
-    progress:"уроков завершено",
-    lessonIntro:"Выберите урок, чтобы начать обучение.",
-    videoReady:"Открыть видео",
-    noVideo:"Видео для этого урока пока не добавлено.",
-    complete:"ЗАВЕРШИТЬ УРОК",
-    completedMessage:"Этот урок уже завершён.",
-    saved:"Урок отмечен как завершённый!",
-    saveError:"Ошибка сохранения: ",
-    chooseLesson:"Сначала выберите урок.",
-    signed:"Вы вошли: ",
-    logout:"Вы вышли из аккаунта.",
-    login:"Выполняется вход...",
-    signup:"Отправка запроса...",
-    signupSuccess:"Аккаунт создан. Вы вошли в систему.",
-    confirmEmail:"Запрос на регистрацию принят. Проверьте почту и перейдите по ссылке подтверждения.",
-    fields:"Введите имя, фамилию, телефон, email и пароль не короче 8 символов.",
-    emailPassword:"Введите email и пароль.",
-    courseDescription:"Основы философии, главные вопросы и философское мышление."
-  },
-  en:{
-    welcome:"Welcome!",
-    loading:"Loading lessons...",
-    noCourse:"No published course was found yet.",
-    noLessons:"There are no published lessons in this course yet.",
-    loadError:"Error loading data: ",
-    lesson:"Lesson",
-    completed:"Completed",
-    notCompleted:"Not completed",
-    minutes:"minutes",
-    progress:"lessons completed",
-    lessonIntro:"Choose a lesson to begin learning.",
-    videoReady:"Open video",
-    noVideo:"A video has not been added to this lesson yet.",
-    complete:"MARK AS COMPLETED",
-    completedMessage:"This lesson has already been completed.",
-    saved:"Lesson marked as completed!",
-    saveError:"Error saving progress: ",
-    chooseLesson:"Please select a lesson first.",
-    signed:"Signed in: ",
-    logout:"You have signed out.",
-    login:"Signing in...",
-    signup:"Submitting request...",
-    signupSuccess:"Account created. You are signed in.",
-    confirmEmail:"Your registration request was received. Check your email and click the confirmation link.",
-    fields:"Enter your first name, last name, phone, email and a password of at least 8 characters.",
-    emailPassword:"Enter your email and password.",
-    courseDescription:"Philosophy basics, fundamental questions and philosophical thinking."
-  }
-};
-
-function currentLang(){
-  return $("lang").value||"uz";
+function toast(message){
+  const el=document.getElementById("toast");
+  el.textContent=message;el.style.display="block";
+  setTimeout(()=>el.style.display="none",3500);
 }
-function tr(key){
-  return translations[currentLang()][key]||translations.uz[key]||key;
+function errorText(error){
+  return error?.message || "Noma’lum xatolik yuz berdi";
 }
-function status(message){
-  $("status").textContent=message;
+function showAuthMessage(message){
+  document.getElementById("auth-message").textContent=message;
 }
-function lessonStatus(message){
-  $("lesson-status").textContent=message;
-}
-
-$("lang").addEventListener("change",()=>{
-  const lang=currentLang();
-  document.documentElement.lang=lang;
-
-  document.querySelectorAll("[data-"+lang+"]").forEach(el=>{
-    el.textContent=el.getAttribute("data-"+lang);
+function showPage(page){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  const target=document.getElementById("page-"+page);
+  if(target)target.classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(x=>{
+    x.classList.toggle("active",x.dataset.page===page);
   });
+  if(page==="learning")loadCourses();
+  if(page==="missions")loadMissions();
+}
+function changeLanguage(){
+  activeLanguage=document.getElementById("language").value;
+  toast("Til tanlandi. Darslar mavjud tarjimasida ko‘rsatiladi.");
+  if(currentCourse)loadLessons(currentCourse);
+}
+function localized(row,base){
+  if(activeLanguage==="ru" && row[base+"_ru"])return row[base+"_ru"];
+  if(activeLanguage==="en" && row[base+"_en"])return row[base+"_en"];
+  return row[base]||"";
+}
+function safe(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
 
-  if(currentUser){
-    renderLessons();
-    updateProgressDisplay();
-    if(activeLesson) showLesson(activeLesson,false);
+async function register(){
+  const first=document.getElementById("reg-first").value.trim();
+  const last=document.getElementById("reg-last").value.trim();
+  const phone=document.getElementById("reg-phone").value.trim();
+  const email=document.getElementById("reg-email").value.trim();
+  const password=document.getElementById("reg-pass").value;
+  if(!first||!last||!email||password.length<6){
+    showAuthMessage("Ism, familiya, email va kamida 6 belgili parolni kiriting.");return;
   }
-});
-
-/* AUTHENTICATION */
-let currentUser=null;
-let activeCourse=null;
-let lessons=[];
-let completedLessonIds=new Set();
-let activeLesson=null;
-let loadVersion=0;
-
-function userView(user){
-  currentUser=user||null;
-
-  $("signed").style.display=user?"block":"none";
-  $("signed").textContent=user?tr("signed")+(user.email||""):"";
-  $("logout").hidden=!user;
-  $("login").hidden=!!user;
-
-  const portal=$("student-portal");
-
-  document.querySelectorAll("body > section").forEach(section=>{
-    if(section!==portal){
-      section.style.display=user?"none":"";
-    }
+  showAuthMessage("Ro‘yxatdan o‘tilmoqda...");
+  const {data,error}=await db.auth.signUp({
+    email,password,
+    options:{data:{first_name:first,last_name:last,full_name:first+" "+last,phone}}
   });
-
-  portal.style.display=user?"block":"none";
-
-  if(user){
-    const metadata=user.user_metadata||{};
-    const fullName=metadata.full_name||
-      [metadata.first_name,metadata.last_name].filter(Boolean).join(" ");
-
-    $("student-name").textContent=
-      (fullName?fullName+" · ":"")+tr("welcome")+" "+(user.email||"");
-
-    window.scrollTo(0,0);
-    loadAcademy(user.id);
+  if(error){showAuthMessage(error.message);return;}
+  if(data.session){
+    await saveProfile(first,last,phone);
+    showAuthMessage("");
+    await enterApp(data.session.user);
   }else{
-    loadVersion++;
-    activeCourse=null;
-    lessons=[];
-    completedLessonIds.clear();
-    activeLesson=null;
-    $("lesson-list").replaceChildren();
-    $("lesson-area").style.display="none";
+    showAuthMessage("Ro‘yxatdan o‘tish muvaffaqiyatli. Emailingizga yuborilgan tasdiqlash havolasini bosing, keyin tizimga kiring.");
   }
 }
 
-/* LOAD COURSE AND LESSONS */
-async function loadAcademy(userId){
-  const version=++loadVersion;
+async function login(){
+  const email=document.getElementById("login-email").value.trim();
+  const password=document.getElementById("login-pass").value;
+  showAuthMessage("Tizimga kirilmoqda...");
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error){showAuthMessage(error.message);return;}
+  showAuthMessage("");
+  await enterApp(data.user);
+}
 
-  $("lesson-list").innerHTML=
-    '<div class="empty-state">'+tr("loading")+'</div>';
+async function saveProfile(first,last,phone){
+  if(!currentUser)return;
+  const {error}=await db.from("profiles").upsert({
+    id:currentUser.id,first_name:first,last_name:last,phone
+  });
+  if(error)console.warn("Profile save:",error.message);
+}
 
-  $("course-title").textContent=
-    currentLang()==="ru"?"Загрузка курса...":
-    currentLang()==="en"?"Loading course...":"Kurs yuklanmoqda...";
+async function logout(){
+  await db.auth.signOut();
+  currentUser=null;
+  document.getElementById("app-section").classList.add("hidden");
+  document.getElementById("bottom-nav").classList.add("hidden");
+  document.getElementById("auth-section").classList.remove("hidden");
+  toast("Hisobdan chiqdingiz");
+}
 
-  const {data:course,error:courseError}=await client
-    .from("courses")
-    .select("*")
-    .eq("title","Falsafaga kirish")
-    .eq("published",true)
-    .maybeSingle();
+async function enterApp(user){
+  currentUser=user;
+  document.getElementById("auth-section").classList.add("hidden");
+  document.getElementById("app-section").classList.remove("hidden");
+  document.getElementById("bottom-nav").classList.remove("hidden");
+  const meta=user.user_metadata||{};
+  const name=meta.full_name||meta.first_name||user.email;
+  document.getElementById("welcome-title").textContent="Xush kelibsiz, "+name+"!";
+  document.getElementById("profile-name").textContent=name;
+  document.getElementById("profile-email").textContent=user.email||"";
+  showPage("home");
+  await refreshDashboard();
+}
 
-  if(version!==loadVersion||!currentUser||currentUser.id!==userId)return;
+async function refreshDashboard(){
+  if(!currentUser)return;
+  const [progressRes,pointsRes]=await Promise.all([
+    db.from("lesson_progress").select("lesson_id,completed")
+      .eq("user_id",currentUser.id).eq("completed",true),
+    db.from("points_transactions").select("points")
+      .eq("user_id",currentUser.id)
+  ]);
+  if(progressRes.error)console.warn("Progress:",progressRes.error.message);
+  if(pointsRes.error)console.warn("Points:",pointsRes.error.message);
 
-  if(courseError){
-    showLoadError(courseError.message);
+  const progress=progressRes.data||[];
+  completedLessonIds=progress.map(x=>x.lesson_id);
+  completedCount=completedLessonIds.length;
+  totalXP=(pointsRes.data||[]).reduce((sum,x)=>sum+(Number(x.points)||0),0);
+
+  const percent=Math.min(100,Math.round(completedCount/20*100));
+  document.getElementById("home-xp").textContent=totalXP;
+  document.getElementById("home-done").textContent=completedCount;
+  document.getElementById("home-percent").textContent=percent+"%";
+  document.getElementById("home-progress").style.width=percent+"%";
+  document.getElementById("home-progress-text").textContent=completedCount+" / 20 dars yakunlandi";
+  document.getElementById("mission-xp").textContent=totalXP;
+  document.getElementById("profile-xp").textContent=totalXP;
+  document.getElementById("profile-done").textContent=completedCount;
+  document.getElementById("ranking-xp").textContent=totalXP;
+}
+
+async function loadCourses(){
+  const container=document.getElementById("courses-list");
+  if(!currentUser)return;
+  container.innerHTML="<p class='muted'>Kurslar yuklanmoqda...</p>";
+  document.getElementById("lessons-area").classList.add("hidden");
+  document.getElementById("lesson-view").classList.add("hidden");
+
+  const {data,error}=await db.from("courses").select("*")
+    .eq("published",true).order("created_at",{ascending:true});
+  if(error){
+    container.innerHTML="<div class='notice'>Kurslarni yuklashda xatolik: "+safe(error.message)+"</div>";
     return;
   }
-
-  if(!course){
-    $("lesson-list").innerHTML=
-      '<div class="empty-state">'+tr("noCourse")+'</div>';
-    $("course-title").textContent=tr("noCourse");
-    return;
+  if(!data?.length){
+    container.innerHTML="<p class='muted'>Hozircha kurslar mavjud emas.</p>";return;
   }
+  container.innerHTML="";
+  data.forEach(course=>{
+    const card=document.createElement("div");
+    card.className="course";
+    card.innerHTML=`
+      <span class="badge">${safe(course.level||"beginner")}</span>
+      <h3>${safe(localized(course,"title"))}</h3>
+      <p class="muted">${safe(localized(course,"description"))}</p>
+      <p class="muted">${safe(course.duration_months||1)} oy</p>
+      <button class="btn" type="button">Kursni ochish →</button>`;
+    card.querySelector("button").onclick=()=>openCourse(course);
+    container.appendChild(card);
+  });
+}
 
-  activeCourse=course;
-  updateCourseText();
+async function openCourse(course){
+  currentCourse=course;
+  document.getElementById("lessons-area").classList.remove("hidden");
+  document.getElementById("selected-course-title").textContent=localized(course,"title");
+  document.getElementById("selected-course-description").textContent=localized(course,"description");
+  document.getElementById("lesson-view").classList.add("hidden");
+  await loadLessons(course);
+}
 
-  const {data:lessonData,error:lessonError}=await client
-    .from("lessons")
-    .select("*")
-    .eq("course_id",course.id)
-    .eq("published",true)
+async function loadLessons(course){
+  const list=document.getElementById("lessons-list");
+  list.innerHTML="<p class='muted'>Darslar yuklanmoqda...</p>";
+  const {data,error}=await db.from("lessons").select("*")
+    .eq("course_id",course.id).eq("published",true)
     .order("lesson_number",{ascending:true});
-
-  if(version!==loadVersion||!currentUser||currentUser.id!==userId)return;
-
-  if(lessonError){
-    showLoadError(lessonError.message);
+  if(error){
+    list.innerHTML="<div class='notice'>Darslarni yuklashda xatolik: "+safe(error.message)+"</div>";
+    return;
+  }
+  accessibleLessons=data||[];
+  if(!accessibleLessons.length){
+    list.innerHTML="<div class='notice'>Hozircha ochiq darslar topilmadi. Birinchi darsni tekshiring.</div>";
     return;
   }
 
-  lessons=lessonData||[];
+  const {data:progress}=await db.from("lesson_progress").select("lesson_id,completed")
+    .eq("user_id",currentUser.id).eq("completed",true);
+  const done=new Set((progress||[]).map(x=>x.lesson_id));
+  const finished=accessibleLessons.filter(x=>done.has(x.id)).length;
+  const percent=Math.round(finished/20*100);
+  document.getElementById("course-progress").style.width=percent+"%";
+  document.getElementById("course-progress-text").textContent=finished+" ta dars yakunlangan";
 
-  if(lessons.length===0){
-    $("lesson-list").innerHTML=
-      '<div class="empty-state">'+tr("noLessons")+'</div>';
-    updateProgressDisplay();
-    return;
-  }
-
-  const {data:progressData,error:progressError}=await client
-    .from("lesson_progress")
-    .select("lesson_id,completed")
-    .eq("user_id",userId);
-
-  if(version!==loadVersion||!currentUser||currentUser.id!==userId)return;
-
-  if(progressError){
-    showLoadError(progressError.message);
-    return;
-  }
-
-  const lessonIds=new Set(lessons.map(item=>item.id));
-  completedLessonIds=new Set(
-    (progressData||[])
-      .filter(item=>item.completed&&lessonIds.has(item.lesson_id))
-      .map(item=>item.lesson_id)
-  );
-
-  renderLessons();
-  updateProgressDisplay();
-}
-
-function showLoadError(message){
-  $("lesson-list").innerHTML=
-    '<div class="empty-state">'+escapeHTML(tr("loadError")+message)+'</div>';
-}
-
-function updateCourseText(){
-  if(!activeCourse)return;
-  const lang=currentLang();
-
-  $("course-title").textContent=
-    (lang==="ru"&&activeCourse.title_ru)||
-    (lang==="en"&&activeCourse.title_en)||
-    activeCourse.title;
-
-  $("course-description").textContent=
-    (lang==="ru"&&activeCourse.description_ru)||
-    (lang==="en"&&activeCourse.description_en)||
-    activeCourse.description||
-    tr("courseDescription");
-}
-
-function localizedLessonTitle(lesson){
-  const lang=currentLang();
-  return (lang==="ru"&&lesson.title_ru)||
-    (lang==="en"&&lesson.title_en)||
-    lesson.title||
-    tr("lesson");
-}
-
-function localizedLessonContent(lesson){
-  const lang=currentLang();
-  return (lang==="ru"&&lesson.content_ru)||
-    (lang==="en"&&lesson.content_en)||
-    lesson.content||
-    "";
-}
-
-/* SAFE TEXT OUTPUT */
-function escapeHTML(value){
-  return String(value??"").replace(/[&<>"']/g,char=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  })[char]);
-}
-
-/* LESSON LIST */
-function renderLessons(){
-  const container=$("lesson-list");
-  container.replaceChildren();
-
-  if(!lessons.length){
-    container.innerHTML=
-      '<div class="empty-state">'+tr("noLessons")+'</div>';
-    return;
-  }
-
-  lessons.forEach((lesson,index)=>{
-    const isCompleted=completedLessonIds.has(lesson.id);
-    const number=lesson.lesson_number||index+1;
-
-    const item=document.createElement("article");
-    item.className="lesson-item";
-
-    const info=document.createElement("div");
-    const numberEl=document.createElement("div");
-    numberEl.className="lesson-number";
-    numberEl.textContent=tr("lesson")+" "+String(number).padStart(2,"0");
-
-    const title=document.createElement("h4");
-    title.textContent=localizedLessonTitle(lesson);
-
-    const duration=document.createElement("p");
-    duration.textContent=(lesson.duration_minutes||20)+" "+tr("minutes");
-
-    info.append(numberEl,title,duration);
-
-    const action=document.createElement("div");
-    action.style.textAlign="right";
-
-    const state=document.createElement("div");
-    state.className="lesson-state";
-    state.textContent=isCompleted?"✓ "+tr("completed"):tr("notCompleted");
-
-    const button=document.createElement("button");
-    button.className="btn alt";
-    button.style.marginTop="9px";
-    button.textContent=currentLang()==="ru"?"ОТКРЫТЬ":
-      currentLang()==="en"?"OPEN":"OCHISH";
-    button.addEventListener("click",()=>showLesson(lesson));
-
-    action.append(state,button);
-    item.append(info,action);
-    container.append(item);
+  list.innerHTML="";
+  accessibleLessons.forEach(lesson=>{
+    const isDone=done.has(lesson.id);
+    const card=document.createElement("div");
+    card.className="lesson"+(isDone?" done":"");
+    card.innerHTML=`
+      <div>
+        <h3>${isDone?"✓ ":""}${safe(lesson.lesson_number)}. ${safe(localized(lesson,"title"))}</h3>
+        <small>${safe(lesson.duration_minutes||20)} daqiqa ${isDone?"· Tugallangan":""}</small>
+      </div>
+      <button class="btn secondary" type="button">${isDone?"Takrorlash":"Ochish"}</button>`;
+    card.querySelector("button").onclick=()=>openLesson(lesson);
+    list.appendChild(card);
   });
+
+  if(accessibleLessons.length<20){
+    const locked=document.createElement("div");
+    locked.className="notice";
+    locked.textContent="Keyingi darslar oldingi darsni tugatganingizdan so‘ng ochiladi.";
+    list.appendChild(locked);
+  }
 }
 
-/* PROGRESS */
-function updateProgressDisplay(){
-  const total=lessons.length;
-  const completed=completedLessonIds.size;
-  const percent=total?Math.round(completed/total*100):0;
-
-  $("progress-label").textContent=percent+"%";
-  $("progress-fill").style.width=percent+"%";
-
-  $("progress-detail").textContent=
-    completed+" / "+total+" "+tr("progress");
+function backToCourses(){
+  currentCourse=null;
+  document.getElementById("lessons-area").classList.add("hidden");
+  document.getElementById("lesson-view").classList.add("hidden");
+  document.getElementById("courses-list").classList.remove("hidden");
+}
+function backToLessons(){
+  document.getElementById("lesson-view").classList.add("hidden");
+  document.getElementById("lessons-area").classList.remove("hidden");
 }
 
-/* OPEN LESSON */
-function showLesson(lesson,scroll=true){
-  activeLesson=lesson;
-
-  $("lesson-area").style.display="block";
-
-  const number=lesson.lesson_number||"";
-  $("lesson-number").textContent=
-    tr("lesson")+" "+number;
-
-  $("lesson-title").textContent=localizedLessonTitle(lesson);
-  $("lesson-text").textContent=localizedLessonContent(lesson);
-
-  $("lesson-duration").textContent=
-    (lesson.duration_minutes||20)+" "+tr("minutes");
-
-  const videoContainer=$("lesson-video");
-  videoContainer.replaceChildren();
-
+function openLesson(lesson){
+  currentLesson=lesson;
+  document.getElementById("lessons-area").classList.add("hidden");
+  document.getElementById("lesson-view").classList.remove("hidden");
+  document.getElementById("lesson-heading").textContent=
+    lesson.lesson_number+". "+localized(lesson,"title");
+  document.getElementById("lesson-duration").textContent=
+    (lesson.duration_minutes||20)+" daqiqa";
+  document.getElementById("lesson-body").textContent=localized(lesson,"content");
+  const video=document.getElementById("lesson-video");
+  video.innerHTML="";
   if(lesson.video_url){
-    try{
-      const videoUrl=new URL(lesson.video_url);
-      if(videoUrl.protocol==="https:"){
-        const link=document.createElement("a");
-        link.href=videoUrl.href;
-        link.target="_blank";
-        link.rel="noopener noreferrer";
-        link.className="video-link";
-        link.textContent="▶ "+tr("videoReady");
-        videoContainer.append(link);
-      }else{
-        videoContainer.textContent=tr("noVideo");
-      }
-    }catch(error){
-      videoContainer.textContent=tr("noVideo");
-    }
-  }else{
-    const noVideo=document.createElement("p");
-    noVideo.textContent=tr("noVideo");
-    videoContainer.append(noVideo);
+    const frame=document.createElement("iframe");
+    frame.src=lesson.video_url;
+    frame.width="100%";frame.height="230";
+    frame.style.border="0";frame.style.borderRadius="12px";
+    frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    frame.allowFullscreen=true;
+    video.appendChild(frame);
   }
-
-  const completed=completedLessonIds.has(lesson.id);
-  const completeButton=$("complete-lesson");
-
-  completeButton.disabled=completed;
-  completeButton.textContent=completed?tr("completedMessage"):tr("complete");
-
-  lessonStatus(completed?tr("completedMessage"):"");
-
-  if(scroll){
-    $("lesson-area").scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-  }
+  const btn=document.getElementById("complete-lesson-btn");
+  const already=completedLessonIds.includes(lesson.id);
+  btn.textContent=already?"✓ Dars yakunlangan":"✓ Darsni tugatdim";
+  btn.disabled=already;
 }
 
-/* MARK LESSON COMPLETED */
-$("complete-lesson").addEventListener("click",async()=>{
-  if(!currentUser||!activeLesson){
-    lessonStatus(tr("chooseLesson"));
-    return;
-  }
+async function completeCurrentLesson(){
+  if(!currentUser||!currentLesson)return;
+  const btn=document.getElementById("complete-lesson-btn");
+  btn.disabled=true;
+  btn.textContent="Saqlanmoqda...";
 
-  if(completedLessonIds.has(activeLesson.id)){
-    lessonStatus(tr("completedMessage"));
-    return;
-  }
-
-  const button=$("complete-lesson");
-  button.disabled=true;
-  lessonStatus(currentLang()==="ru"?"Сохранение...":
-    currentLang()==="en"?"Saving...":"Saqlanmoqda...");
-
-  const {error}=await client
-    .from("lesson_progress")
-    .upsert({
-      user_id:currentUser.id,
-      lesson_id:activeLesson.id,
-      completed:true,
-      completed_at:new Date().toISOString()
-    },{
-      onConflict:"user_id,lesson_id"
-    });
+  const {error}=await db.from("lesson_progress").upsert({
+    user_id:currentUser.id,
+    lesson_id:currentLesson.id,
+    completed:true,
+    completed_at:new Date().toISOString()
+  },{onConflict:"user_id,lesson_id"});
 
   if(error){
-    button.disabled=false;
-    lessonStatus(tr("saveError")+error.message);
+    toast("Progress saqlanmadi: "+error.message);
+    btn.disabled=false;
+    btn.textContent="✓ Darsni tugatdim";
     return;
   }
 
-  completedLessonIds.add(activeLesson.id);
-  renderLessons();
-  updateProgressDisplay();
-  button.disabled=true;
-  button.textContent=tr("completedMessage");
-  lessonStatus(tr("saved"));
-});
+  // Birinchi dars missiyasi
+  if(Number(currentLesson.lesson_number)===1){
+    await awardMission("first_lesson",currentLesson.id);
+  }
+  // Kunlik o‘qish missiyasi
+  await awardMission("daily_learning",currentLesson.id);
 
-/* BACK TO LESSON LIST */
-$("back-lessons").addEventListener("click",()=>{
-  $("lesson-area").style.display="none";
-  activeLesson=null;
-  $("lesson-list").scrollIntoView({
-    behavior:"smooth",
-    block:"start"
+  toast("Dars muvaffaqiyatli yakunlandi!");
+  await refreshDashboard();
+  await loadLessons(currentCourse);
+  document.getElementById("lesson-view").classList.add("hidden");
+  document.getElementById("lessons-area").classList.remove("hidden");
+}
+
+async function awardMission(code,sourceId){
+  const {data:mission,error}=await db.from("missions").select("id")
+    .eq("code",code).eq("active",true).maybeSingle();
+  if(error||!mission)return;
+  const {data,error:rpcError}=await db.rpc("complete_mission",{
+    p_mission_id:mission.id,p_source_id:sourceId
   });
-});
-
-/* SIGN UP */
-$("signup").onclick=async()=>{
-  const first=$("su-first").value.trim();
-  const last=$("su-last").value.trim();
-  const phone=$("su-phone").value.trim();
-  const email=$("su-email").value.trim();
-  const password=$("su-pass").value;
-
-  if(!first||!last||!phone||!email||password.length<8){
-    status(tr("fields"));
-    return;
-  }
-
-  status(tr("signup"));
-  $("signup").disabled=true;
-
-  try{
-    const {data,error}=await client.auth.signUp({
-      email,
-      password,
-      options:{
-        emailRedirectTo:location.origin,
-        data:{
-          first_name:first,
-          last_name:last,
-          full_name:first+" "+last,
-          phone:phone
-        }
-      }
-    });
-
-    if(error){
-      status(error.message);
-      return;
-    }
-
-    if(data.session){
-      userView(data.user);
-      status(tr("signupSuccess"));
-    }else{
-      status(tr("confirmEmail"));
-    }
-  }catch(error){
-    status(error.message||String(error));
-  }finally{
-    $("signup").disabled=false;
-  }
-};
-
-/* SIGN IN */
-$("login").onclick=async()=>{
-  const email=$("li-email").value.trim();
-  const password=$("li-pass").value;
-
-  if(!email||!password){
-    status(tr("emailPassword"));
-    return;
-  }
-
-  status(tr("login"));
-  $("login").disabled=true;
-
-  try{
-    const {data,error}=await client.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if(error){
-      status(error.message);
-      return;
-    }
-
-    userView(data.user);
-    status(currentLang()==="ru"?"Вы успешно вошли.":
-      currentLang()==="en"?"You have successfully signed in.":
-      "Muvaffaqiyatli kirdingiz.");
-  }catch(error){
-    status(error.message||String(error));
-  }finally{
-    $("login").disabled=false;
-  }
-};
-
-/* SIGN OUT */
-async function logoutUser(){
-  const {error}=await client.auth.signOut();
-
-  if(error){
-    status(error.message);
-  }else{
-    status(tr("logout"));
-  }
+  if(rpcError)console.warn("Mission:",rpcError.message);
+  else console.log("Mission result:",data);
 }
 
-$("logout").onclick=logoutUser;
-$("portal-logout").onclick=logoutUser;
-
-/* AUTH SESSION */
-client.auth.onAuthStateChange((_event,session)=>{
-  userView(session?.user||null);
-});
-
-client.auth.getSession().then(({data,error})=>{
+async function loadMissions(){
+  if(!currentUser)return;
+  const list=document.getElementById("missions-list");
+  list.innerHTML="<p class='muted'>Missiyalar yuklanmoqda...</p>";
+  const {data,error}=await db.from("missions").select("*").eq("active",true);
   if(error){
-    status(error.message);
+    list.innerHTML="<div class='notice'>Missiyalarni yuklashda xatolik: "+safe(error.message)+"</div>";
     return;
   }
-  userView(data.session?.user||null);
-});
+  const {data:completed}=await db.from("mission_completions").select("mission_id")
+    .eq("user_id",currentUser.id);
+  const completedIds=new Set((completed||[]).map(x=>x.mission_id));
+  document.getElementById("mission-done").textContent=completedIds.size;
+  list.innerHTML="";
+  (data||[]).forEach(m=>{
+    const done=completedIds.has(m.id);
+    const title=localized(m,"title");
+    const description=localized(m,"description");
+    const item=document.createElement("div");
+    item.className="mission";
+    item.innerHTML=`
+      <div style="display:flex;justify-content:space-between;gap:10px">
+        <strong>${safe(title)}</strong>
+        <span class="badge">+${safe(m.reward_points)} XP</span>
+      </div>
+      <p class="muted">${safe(description)}</p>
+      <small class="gold">${done?"✓ Bajarilgan":"Bajarish kutilmoqda"}</small>`;
+    list.appendChild(item);
+  });
+  if(!data?.length)list.innerHTML="<p class='muted'>Missiyalar hozircha mavjud emas.</p>";
+}
+
+async function init(){
+  const {data:{session}}=await db.auth.getSession();
+  if(session?.user)await enterApp(session.user);
+  db.auth.onAuthStateChange((event,session)=>{
+    if(event==="SIGNED_IN"&&session?.user&&!currentUser){
+      enterApp(session.user);
+    }
+    if(event==="SIGNED_OUT"){
+      currentUser=null;
+      document.getElementById("app-section").classList.add("hidden");
+      document.getElementById("bottom-nav").classList.add("hidden");
+      document.getElementById("auth-section").classList.remove("hidden");
+    }
+  });
+}
+init();
 </script>
 </body>
 </html>
